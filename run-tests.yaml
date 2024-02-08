@@ -1,0 +1,54 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: run-tests
+spec:
+  workspaces:
+    - name: source
+  steps:
+  - name: unit-tests
+    image: python:3.10
+    workingDir: $(workspaces.source.path)
+    script: |
+      pip install -r requirements.txt # Install Python dependencies
+      # python -m unittest discover -s tests -p '*_test.py' # Run Python unit tests
+      # python -m unittest discover -s /accounts -p 'tests.py' # Run Python unit tests
+      #python -m unittest discover -s tests
+      #python -m unittest discover -s source/accounts
+      # docker-compose exec web python manage.py test
+    env:
+      - name: DOCKER_HOST
+        value: tcp://localhost:2376
+      - name: DOCKER_TLS_VERIFY
+        value: "1"
+      - name: DOCKER_CERT_PATH
+        value: "/certs/client"
+    volumeMounts:
+      - name: dind-certs
+        mountPath: /certs/client
+  sidecars:
+    - name: dind
+      image: docker:dind
+      securityContext:
+        privileged: true
+      args:
+        - --storage-driver=vfs
+        - --userland-proxy=false
+        - --debug
+      env:
+        - name: DOCKER_TLS_CERTDIR
+          value: /certs
+      volumeMounts:
+        - name: dind-certs
+          mountPath: /certs/client
+        - name: $(workspaces.source.volume)
+          mountPath: $(workspaces.source.path)
+      readinessProbe:
+        periodSeconds: 1
+        exec:
+          command: ['ls','/certs/client/ca.pem']
+  volumes:
+      - name: dind-certs
+        emptyDir: {}
+      - name: source
+        emptyDir: {}
