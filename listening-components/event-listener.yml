@@ -1,0 +1,12 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: github-pr
+spec:
+  serviceAccountName: tekton-sa
+  triggers:
+    - name: trigger-pr
+      bindings:
+        - ref: github-pr-tgr-binding
+      template:
+        ref: github-pr-tgr-template
