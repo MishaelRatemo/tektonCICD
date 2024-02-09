@@ -16,6 +16,7 @@ spec:
       #python -m unittest discover -s tests
       #python -m unittest discover -s source/accounts
       # docker-compose exec web python manage.py test
+      find . -type f -name 'tests.py' -exec python {} \;
     env:
       - name: DOCKER_HOST
         value: tcp://localhost:2376
