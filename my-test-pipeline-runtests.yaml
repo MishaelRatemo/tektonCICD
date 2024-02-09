@@ -8,10 +8,15 @@ spec:
     type: string
   - name: revision
     type: string
+  workspaces:
+    - name: shared-data
   tasks:
   - name: fetch-source
     taskRef:
       name: git-clone
+    workspaces:
+      - name: output
+        workspace: shared-data
     params:
       - name: url
         value: $(params.repo-url)
@@ -21,3 +26,13 @@ spec:
     runAfter: ["fetch-source"]
     taskRef:
       name: list-source
+    workspaces:
+      - name: source
+        workspace: shared-data
+  - name: run-tests
+    runAfter: ['fetch-source']
+    taskRef:
+      name: run-tests
+    workspaces:
+      - name: source
+        workspace: shared-data
