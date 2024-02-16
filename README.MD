@@ -14,3 +14,11 @@
     for read only or 
 
     `kubectl apply --filename https://storage.googleapis.com/tekton-releases/dashboard/latest/release-full.yaml` for  write previllages
+
+* Install triggers and Interceptors 
+
+    `kubectl apply --filename \
+https://storage.googleapis.com/tekton-releases/triggers/latest/release.yaml
+kubectl apply --filename \
+https://storage.googleapis.com/tekton-releases/triggers/latest/interceptors.yaml` 
+
