@@ -3,14 +3,20 @@ kind: Pipeline
 metadata:
   name: hello-pipeline
 spec:
+  workspaces:
+    - name: shared-data-ws
   tasks:
-    - name: hello-task
-      taskRef:
-        name: hello-task
-    - name: bye-task
-      taskSpec:
-        steps:
-          - name: bye
-            image: ubuntu
-            script: >
-              echo "Bye"
+     - name: hello-task
+       taskRef:
+         kind: Task
+         name: hello-task
+       workspaces:
+          - name: output
+            workspace: shared-data-ws
+     - name: bye-task
+       taskRef:
+         kind: Task
+         name: bye-task
+       workspaces:
+          - name: output
+            workspace: shared-data-ws
