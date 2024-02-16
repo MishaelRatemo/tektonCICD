@@ -1,0 +1,13 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: bye-task
+spec:
+  workspaces:
+    - name: output
+      workspace: default
+  steps:
+    - name: hello
+      image: ubuntu
+      script: >
+        echo "Bye Bye"
