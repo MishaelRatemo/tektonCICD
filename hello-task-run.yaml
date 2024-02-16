@@ -1,7 +1,11 @@
 apiVersion: tekton.dev/v1
 kind: TaskRun
 metadata:
-  name: hello-task-run
+  generateName: hello-task-run-
 spec:
   taskRef:
     name: hello-task
+  workspaces:
+    - name: output
+      emptyDir: {}
+
